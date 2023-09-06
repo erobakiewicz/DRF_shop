@@ -1,0 +1,70 @@
+[
+{
+    "model": "shop.globalproductlimit",
+    "pk": 1,
+    "fields": {
+        "limit_size": 5
+    }
+},
+{
+    "model": "shop.region",
+    "pk": 1,
+    "fields": {
+        "name": "POL",
+        "limit_size": 3,
+        "close_region": false,
+        "unlimited_access": false
+    }
+},
+{
+    "model": "shop.region",
+    "pk": 2,
+    "fields": {
+        "name": "DE",
+        "limit_size": 10,
+        "close_region": false,
+        "unlimited_access": false
+    }
+},
+{
+    "model": "shop.region",
+    "pk": 3,
+    "fields": {
+        "name": "FR",
+        "limit_size": 5,
+        "close_region": true,
+        "unlimited_access": false
+    }
+},
+{
+    "model": "shop.region",
+    "pk": 4,
+    "fields": {
+        "name": "UK",
+        "limit_size": 5,
+        "close_region": false,
+        "unlimited_access": true
+    }
+},
+{
+    "model": "shop.shelf",
+    "pk": 1,
+    "fields": {
+        "name": "SmallShelf"
+    }
+},
+{
+    "model": "shop.shelf",
+    "pk": 2,
+    "fields": {
+        "name": "MediumShelf"
+    }
+},
+{
+    "model": "shop.shelf",
+    "pk": 3,
+    "fields": {
+        "name": "BigShelf"
+    }
+}
+]
