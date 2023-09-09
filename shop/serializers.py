@@ -42,6 +42,7 @@ class CartSerializer(serializers.ModelSerializer):
         """
         cart_items = validated_data.pop('cart_items')
         cart, created = Cart.objects.get_or_create(**validated_data)
+
         for cart_item in cart_items:
             CartItem.objects.create(cart=cart, **cart_item)
         return cart

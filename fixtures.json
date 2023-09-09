@@ -10,9 +10,9 @@
     "model": "shop.region",
     "pk": 1,
     "fields": {
-        "name": "POL",
+        "name": "PL",
         "limit_size": 3,
-        "close_region": false,
+        "closed_access": false,
         "unlimited_access": false
     }
 },
@@ -22,7 +22,7 @@
     "fields": {
         "name": "DE",
         "limit_size": 10,
-        "close_region": false,
+        "closed_access": false,
         "unlimited_access": false
     }
 },
@@ -31,8 +31,8 @@
     "pk": 3,
     "fields": {
         "name": "FR",
-        "limit_size": 5,
-        "close_region": true,
+        "limit_size": 55,
+        "closed_access": true,
         "unlimited_access": false
     }
 },
@@ -41,8 +41,8 @@
     "pk": 4,
     "fields": {
         "name": "UK",
-        "limit_size": 5,
-        "close_region": false,
+        "limit_size": 1,
+        "closed_access": false,
         "unlimited_access": true
     }
 },

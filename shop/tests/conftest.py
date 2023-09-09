@@ -8,51 +8,49 @@ from rest_framework.test import APIClient
 
 
 @pytest.fixture
-def get_user(db):
+def user(db):
     return UserFactory()
 
 
 @pytest.fixture
-def get_shelf(db):
+def shelf(db):
     return ShelfFactory()
 
 
 @pytest.fixture
-def get_global_limit(db):
+def global_limit(db):
     return GlobalProductLimitFactory()
 
 
 @pytest.fixture
-def get_local_limit(db):
+def local_limit(db):
     return RegionFactory()
 
 
 @pytest.fixture
-def get_client(db, get_user):
+def client(db, user):
     client = APIClient()
-    client.force_authenticate(user=get_user)
+    client.force_authenticate(user=user)
     return client
 
 
 @pytest.fixture
-def cart_1_item(db, get_user, get_shelf, get_local_limit):
-    cart = CartFactory(user=get_user, region=get_local_limit)
-    CartItemFactory(shelf=get_shelf, cart=cart)
+def cart_1_item(db, user, shelf, local_limit):
+    cart = CartFactory(user=user, region=local_limit)
+    CartItemFactory(shelf=shelf, cart=cart)
     return cart
 
 
 @pytest.fixture
-def cart_1_item_different_region(db, get_user, get_shelf):
+def cart_1_item_different_region(db, user, shelf):
     different_region = RegionFactory(name="OTHER")
-    cart = CartFactory(user=get_user, region=different_region)
-    CartItemFactory(shelf=get_shelf, cart=cart)
+    cart = CartFactory(user=user, region=different_region)
+    CartItemFactory(shelf=shelf, cart=cart)
     return cart
 
 
 @pytest.fixture
-def order_with_3_items(db, get_user, get_local_limit):
-    order = OrderFactory(user=get_user, region=get_local_limit)
-    OrderItemFactory(order=order)
-    OrderItemFactory(order=order)
-    OrderItemFactory(order=order)
+def order_with_3_items(db, user, local_limit):
+    order = OrderFactory(user=user, region=local_limit)
+    OrderItemFactory.create_batch(3, order=order)
     return order

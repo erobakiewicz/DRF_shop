@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from shop.constants import CartStatuses
 from shop.exceptions import (
     ObjectDoesNotExistAPIException, GlobalLimitExceedException, RegionLimitExceedException,
     GlobalProductLimitObjectDoesNotExist
@@ -78,6 +79,7 @@ class OrderViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+
         try:
             cart = Cart.objects.get(id=data.get('cart_id'))
         except ObjectDoesNotExist as exc:
@@ -86,6 +88,7 @@ class OrderViewSet(
             region = Region.objects.get(name=data.get('region'))
         except ObjectDoesNotExist as exc:
             raise ObjectDoesNotExistAPIException(detail=exc)
+
         with transaction.atomic():
             order = Order.objects.create(
                 region=region,
@@ -99,6 +102,6 @@ class OrderViewSet(
                         RegionLimitExceedException, GlobalLimitExceedException, GlobalProductLimitObjectDoesNotExist
                 ) as exc:
                     raise ValidationError(exc)
-            cart.status = Cart.Statuses.CLOSED
+            cart.status = CartStatuses.CLOSED
             cart.save(update_fields=["status"])
         return self.get_create_response(order=order)
