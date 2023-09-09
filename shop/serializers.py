@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from shop.constants import ErrorMessages
 from shop.models import Cart, CartItem, Shelf, Order, OrderItem, Region
 
 
@@ -75,7 +76,7 @@ class CreateOrderSerializer(serializers.Serializer):
         :param attrs: validated data
         """
         if data['region'] != Cart.objects.get(id=data['cart_id']).region.name:
-            raise serializers.ValidationError("Cart and order regions don't match.")
+            raise serializers.ValidationError(ErrorMessages.ORDER_CART_REGIONS_MISMATCH)
         return data
 
     def validate_cart_id(self, value):
@@ -84,7 +85,7 @@ class CreateOrderSerializer(serializers.Serializer):
         :param value: cart id
         """
         if not Cart.objects.filter(id=value, user=self.context['request'].user).exists():
-            raise serializers.ValidationError("Cart does not belong to user or does not exist.")
+            raise serializers.ValidationError(ErrorMessages.CART_USER_MISMATCH)
         return value
 
     def validate_region(self, value):
@@ -93,5 +94,5 @@ class CreateOrderSerializer(serializers.Serializer):
         :param value: region name
         """
         if not Region.objects.filter(name=value).exists():
-            raise serializers.ValidationError("Region does not exist.")
+            raise serializers.ValidationError(ErrorMessages.REGION_DOES_NOT_EXIST)
         return value

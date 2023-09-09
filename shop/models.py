@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from shop.constants import CartStatuses, OrderStatuses
+from shop.constants import CartStatuses, OrderStatuses, ErrorMessages
 from shop.exceptions import (
     GlobalProductLimitObjectDoesNotExist, GlobalLimitExceedException, RegionLimitExceedException
 )
@@ -39,7 +39,7 @@ class GlobalProductLimit(models.Model):
         global_limit = cls.objects.first()
 
         if not global_limit:
-            raise GlobalProductLimitObjectDoesNotExist("Global limit not set.")
+            raise GlobalProductLimitObjectDoesNotExist(ErrorMessages.GLOBAL_LIMIT_NOT_SET)
         return global_limit.limit_size
 
 
@@ -56,9 +56,13 @@ class Region(models.Model):
     def __str__(self):
         return f"Region {self.name}"
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
     def clean(self):
         if self.closed_access and self.unlimited_access:
-            raise ValidationError("Region cannot have closed and unlimited access at the same time.")
+            raise ValidationError(ErrorMessages.REGION_ACCESS_ERROR)
 
 
 class Shelf(models.Model):
@@ -190,7 +194,7 @@ class OrderItem(models.Model):
             global_limit = global_limit_size
 
         if global_limit <= 0:
-            raise GlobalLimitExceedException("Global limit exceeded.")
+            raise GlobalLimitExceedException(ErrorMessages.GLOBAL_LIMIT_EXCEEDED)
 
     def validate_regional_daily_limit(self, region: Region):
         """
@@ -205,4 +209,4 @@ class OrderItem(models.Model):
         local_limit = region.limit_size - ordered_items_count
 
         if region.closed_access or local_limit <= 0:
-            raise RegionLimitExceedException(f"Region {self.order.region.name}: closed or limit exceeded.")
+            raise RegionLimitExceedException(ErrorMessages.REGION_LIMIT_EXCEEDED.format(region.name))
