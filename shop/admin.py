@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 
 from shop.models import Shelf, Region, GlobalProductLimit, Order, OrderItem, Cart, CartItem
@@ -19,8 +20,14 @@ class ShelfAdmin(admin.ModelAdmin):
     pass
 
 
+class OrderItemFormSet(forms.BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
+    formset = OrderItemFormSet
 
 
 @admin.register(Order)

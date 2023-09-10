@@ -98,13 +98,7 @@ For OpenAPI documentation go to DOMAIN/swagger/ (login required).
 
 
 ## TODO
-Order creation process is making too many queries to database. It can be improved by it would be better to get rid of 
-using SQL queries in it as much as possible. SQL database should be used for persistence and not validation and daily 
-operations.
-Persistent data and operational data layers should be separated.
-Limit checking process should be moved to cache or NoSQL database to avoid counting all orders every time. 
-No SQL query will be as fast as checking cache or noSQL database. Cache or noSQL database implementation will also 
-reduce numer of queries to SQL database.
+Limit validation is done only on API level. It should be done on model level as well.
 
 Limits are dynamic but only in limit quantity not period of validity. Combined with new fields limit_start and 
 limit_end in limit models cache entry TTL based on that information would determine how long the limit is valid.

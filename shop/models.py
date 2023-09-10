@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
@@ -7,7 +5,7 @@ from django.db import models
 
 from shop.constants import CartStatuses, OrderStatuses, ErrorMessages
 from shop.exceptions import (
-    GlobalProductLimitObjectDoesNotExist, GlobalLimitExceedException, RegionLimitExceedException
+    GlobalProductLimitObjectDoesNotExist
 )
 
 
@@ -20,10 +18,10 @@ class GlobalProductLimit(models.Model):
     class Meta:
         verbose_name = "Global product limit"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Global product sold limit: {self.limit_size}"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """
         Deletes all other objects and saves the current one thus making sure global limit is a singleton object.
         """
@@ -31,7 +29,7 @@ class GlobalProductLimit(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def get_global_limit(cls):
+    def get_global_limit(cls) -> int:
         """
         Returns the global limit size.
         :return: global limit size or ObjectDoesNotExist exception
@@ -53,14 +51,14 @@ class Region(models.Model):
         verbose_name = "Region"
         verbose_name_plural = "Regions"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Region {self.name}"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         self.full_clean()
         return super().save(*args, **kwargs)
 
-    def clean(self):
+    def clean(self) -> None:
         if self.closed_access and self.unlimited_access:
             raise ValidationError(ErrorMessages.REGION_ACCESS_ERROR)
 
@@ -72,7 +70,7 @@ class Shelf(models.Model):
         verbose_name = "Shelf"
         verbose_name_plural = "Shelves"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -98,7 +96,7 @@ class Cart(models.Model):
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Cart of user {self.user} cart, id: {self.id}"
 
 
@@ -119,7 +117,7 @@ class CartItem(models.Model):
         verbose_name = "Cart"
         verbose_name_plural = "Cart items"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.shelf.name
 
 
@@ -145,7 +143,7 @@ class Order(models.Model):
         verbose_name = "Order"
         verbose_name_plural = "Orders"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Order {self.id}, user {self.user}, region {self.region}"
 
 
@@ -166,47 +164,5 @@ class OrderItem(models.Model):
         verbose_name = "Order item"
         verbose_name_plural = "Order items"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Order {self.order.id} shelf {self.item.name}"
-
-    def save(self, *args, **kwargs):
-        """
-        Validates the limits and saves the item.
-        """
-        self.validate_global_daily_limit()
-
-        if not self.order.region.unlimited_access:
-            self.validate_regional_daily_limit(region=self.order.region)
-        super().save(*args, **kwargs)
-
-    @classmethod
-    def validate_global_daily_limit(cls):
-        """
-        Checks if the global limit is exceeded for today.
-        :return: None or APIException
-        """
-        total_items_today = cls.objects.filter(order__created_at=datetime.date.today())
-        global_limit_size = GlobalProductLimit.get_global_limit()
-
-        if total_items_today:
-            global_limit = global_limit_size - total_items_today.count()
-        else:
-            global_limit = global_limit_size
-
-        if global_limit <= 0:
-            raise GlobalLimitExceedException(ErrorMessages.GLOBAL_LIMIT_EXCEEDED)
-
-    def validate_regional_daily_limit(self, region: Region):
-        """
-        Checks if the region is closed or the limit is exceeded for today.
-        :param region: Region
-        :return: None or APIException
-        """
-        ordered_items_count = OrderItem.objects.filter(
-            order__created_at=datetime.date.today(),
-            order__region=region
-        ).count()
-        local_limit = region.limit_size - ordered_items_count
-
-        if region.closed_access or local_limit <= 0:
-            raise RegionLimitExceedException(ErrorMessages.REGION_LIMIT_EXCEEDED.format(region.name))

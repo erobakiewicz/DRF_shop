@@ -1,10 +1,10 @@
 import pytest
+from rest_framework.test import APIClient
 
 from shop.tests.factories import (
-    ShelfFactory, GlobalProductLimitFactory, RegionFactory, UserFactory, OrderItemFactory, OrderFactory, CartFactory,
+    ShelfFactory, GlobalProductLimitFactory, RegionFactory, UserFactory, CartFactory,
     CartItemFactory
 )
-from rest_framework.test import APIClient
 
 
 @pytest.fixture
@@ -47,10 +47,3 @@ def cart_1_item_different_region(db, user, shelf):
     cart = CartFactory(user=user, region=different_region)
     CartItemFactory(shelf=shelf, cart=cart)
     return cart
-
-
-@pytest.fixture
-def order_with_3_items(db, user, local_limit):
-    order = OrderFactory(user=user, region=local_limit)
-    OrderItemFactory.create_batch(3, order=order)
-    return order
