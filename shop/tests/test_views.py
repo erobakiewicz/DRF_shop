@@ -12,6 +12,7 @@ from shop.tests.factories import CartItemFactory, RegionFactory
 
 @pytest.mark.django_db
 class CartViewSetTestCase:
+    url = reverse("api:cart-list")
 
     def test_add_item_to_cart(self, client, shelf, local_limit):
         data = {
@@ -40,7 +41,7 @@ class CartViewSetTestCase:
             ]
         }
 
-        response = client.post(path=reverse("api:cart-list"), data=data, format="json")
+        response = client.post(path=self.url, data=data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data.get("cart_items")[0].get("shelf")[0] == 'Invalid pk "12345" - object does not exist.'
@@ -55,7 +56,7 @@ class CartViewSetTestCase:
             ]
         }
 
-        response = client.post(path=reverse("api:cart-list"), data=data, format="json")
+        response = client.post(path=self.url, data=data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data.get("region")[0] == 'Invalid pk "12345" - object does not exist.'
@@ -63,12 +64,13 @@ class CartViewSetTestCase:
 
 @pytest.mark.django_db
 class OrderViewSetTestCase:
+    url = reverse("api:order-list")
 
     def test_create_order(
             self, user, client, shelf, global_limit, local_limit, cart_1_item
     ):
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -89,7 +91,7 @@ class OrderViewSetTestCase:
         local_limit.save(update_fields=['unlimited_access', 'limit_size'])
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -104,7 +106,7 @@ class OrderViewSetTestCase:
 
     def test_cannot_create_order_from_non_existing_cart(self, client, local_limit):
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": 12345, "region": local_limit.name}
         )
 
@@ -116,7 +118,7 @@ class OrderViewSetTestCase:
     ):
         other_region = RegionFactory(name="Gondor")
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": other_region.name}
 
         )
@@ -128,7 +130,7 @@ class OrderViewSetTestCase:
             self, user, client, shelf, global_limit, local_limit, cart_1_item
     ):
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id,
                   "region": "Mordor"}
         )
@@ -140,7 +142,7 @@ class OrderViewSetTestCase:
             self, user, client, shelf, local_limit, cart_1_item
     ):
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -154,7 +156,7 @@ class OrderViewSetTestCase:
         local_limit.save(update_fields=['closed_access'])
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -169,7 +171,7 @@ class OrderViewSetTestCase:
         CartItemFactory.create_batch(2, cart=cart_1_item)
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -185,7 +187,7 @@ class OrderViewSetTestCase:
         local_limit.save(update_fields=['limit_size'])
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -201,7 +203,7 @@ class OrderViewSetTestCase:
         local_limit.limit_size = 1
         local_limit.save(update_fields=['limit_size'])
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -209,7 +211,7 @@ class OrderViewSetTestCase:
         assert str(response.data[0]) == "Region EU: closed or limit exceeded."
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={
                 "cart_id": cart_1_item_different_region.id,
                 "region": cart_1_item_different_region.region.name
@@ -225,14 +227,14 @@ class OrderViewSetTestCase:
         CartItemFactory(shelf=shelf, cart=cart_1_item)
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
         assert response.status_code == status.HTTP_201_CREATED
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -244,7 +246,7 @@ class OrderViewSetTestCase:
             assert global_limit.limit_size == 3
 
             response = client.post(
-                path=reverse("api:order-list"),
+                path=self.url,
                 data={"cart_id": cart_1_item.id, "region": local_limit.name}
             )
 
@@ -260,14 +262,14 @@ class OrderViewSetTestCase:
         CartItemFactory(shelf=shelf, cart=cart_1_item)
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
         assert response.status_code == status.HTTP_201_CREATED
 
         response = client.post(
-            path=reverse("api:order-list"),
+            path=self.url,
             data={"cart_id": cart_1_item.id, "region": local_limit.name}
         )
 
@@ -280,7 +282,7 @@ class OrderViewSetTestCase:
             assert local_limit.limit_size == 3
 
             response = client.post(
-                path=reverse("api:order-list"),
+                path=self.url,
                 data={"cart_id": cart_1_item.id, "region": local_limit.name}
             )
 

@@ -1,3 +1,6 @@
+from django.db import models
+
+
 class ErrorMessages:
     GLOBAL_LIMIT_NOT_SET = "Global limit not set."
     GLOBAL_LIMIT_EXCEEDED = "Global limit exceeded."
@@ -12,23 +15,12 @@ class ErrorMessages:
     ORDER_CART_REGIONS_MISMATCH = "Cart and order regions don't match."
 
 
-class CartStatuses:
+class CartStatuses(models.IntegerChoices):
     OPEN = 10
     CLOSED = 20
 
-    Choices = (
-        (OPEN, 'Open'),
-        (CLOSED, 'Closed'),
-    )
 
-
-class OrderStatuses:
+class OrderStatuses(models.IntegerChoices):
     PENDING = 10
     COMPLETED = 20
     CANCELED = 30
-
-    Choices = (
-        (PENDING, 'Pending'),
-        (COMPLETED, 'Completed'),
-        (CANCELED, 'Canceled'),
-    )

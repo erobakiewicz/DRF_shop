@@ -4,7 +4,7 @@ services:
   web:
     build: .
     command: >
-      bash -c "python manage.py migrate && python manage.py loaddata fixtures.json && python manage.py runserver 0.0.0.0:8000"
+      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
@@ -17,10 +17,8 @@ services:
     image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+    env_file:
+      - ./.env.dev
 
 volumes:
   postgres_data:

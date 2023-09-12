@@ -2,7 +2,7 @@
 .git
 .gitignore
 .DS_Store
-,idea
+.idea
 .env
 env/
 venv/

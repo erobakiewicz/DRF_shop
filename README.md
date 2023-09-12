@@ -5,21 +5,22 @@ This is a simple API for a shop with shelves. It allows to add shelves to cart a
 It allows to set daily limits for regions and globally for number of order items that can be purchased in one day. 
 
 ## Requirements
-- python 3.8
+- python 3.11
 - docker
 - docker-compose
 (if you want to run without docker, you need to install postgresql and pipenv)
 
 ## Installation
-Fill out .env.dev if you want to make any changes.
+Create and fill in the .env.dev file in the project root directory based on .env.dev.example.
 
 Run the following commands in the project root directory:
 ```docker-compose up```
 
 To create superuser:
-```docker-compose run web python manage.py createsuperuser```
+```docker-compose run -rm web python manage.py createsuperuser```
 
 Running without Docker:
+Create and fill in the .env.dev file in the project root directory based on .env.dev.example.
 Create database in postgresql and fill in SQL_DATABASE .env.dev (and SQL_HOST if needed e.g. localhost).
 
 ```pipenv install -r requirements.txt```

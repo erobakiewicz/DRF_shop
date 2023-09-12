@@ -17,6 +17,7 @@ class GlobalProductLimit(models.Model):
 
     class Meta:
         verbose_name = "Global product limit"
+        verbose_name_plural = "Global product limits"
 
     def __str__(self) -> str:
         return f"Global product sold limit: {self.limit_size}"
@@ -82,7 +83,7 @@ class Cart(models.Model):
     )
     status = models.IntegerField(
         verbose_name="status",
-        choices=CartStatuses.Choices,
+        choices=CartStatuses.choices,
         default=CartStatuses.OPEN
     )
     region = models.ForeignKey(
@@ -134,7 +135,7 @@ class Order(models.Model):
     )
     status = models.IntegerField(
         verbose_name="status",
-        choices=OrderStatuses.Choices,
+        choices=OrderStatuses.choices,
         default=OrderStatuses.PENDING
     )
     created_at = models.DateField(verbose_name="created at", auto_now_add=True)

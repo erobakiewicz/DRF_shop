@@ -1,5 +1,5 @@
 from django.db.models import QuerySet
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -40,7 +40,7 @@ class OrderViewSet(
     def perform_create(self, serializer: CreateOrderSerializer) -> None:
         serializer.save(user=self.request.user)
 
-    def get_serializer_class(self) -> CreateOrderSerializer or OrderSerializer:
+    def get_serializer_class(self) -> CreateOrderSerializer | OrderSerializer:
         if self.action == 'create':
             return CreateOrderSerializer
         return OrderSerializer
@@ -57,4 +57,4 @@ class OrderViewSet(
             "order_id": serializer.data.get("id"),
             "order_status": serializer.data.get("status"),
             "shelves": serializer.data.get("order_items")
-        }, status=201)
+        }, status=status.HTTP_201_CREATED)

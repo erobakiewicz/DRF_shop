@@ -21,8 +21,7 @@ class ShelfAdmin(admin.ModelAdmin):
 
 
 class OrderItemFormSet(forms.BaseInlineFormSet):
-    def clean(self):
-        super().clean()
+    pass
 
 
 class OrderItemInline(admin.TabularInline):

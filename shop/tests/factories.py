@@ -14,54 +14,54 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class GlobalProductLimitFactory(factory.django.DjangoModelFactory):
+    limit_size = 3
+
     class Meta:
         model = GlobalProductLimit
 
-    limit_size = 3
-
 
 class RegionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = Region
-
     name = "EU"
     limit_size = 3
 
+    class Meta:
+        model = Region
+
 
 class ShelfFactory(factory.django.DjangoModelFactory):
+    name = factory.LazyFunction(lambda: faker.name())
+
     class Meta:
         model = Shelf
 
-    name = factory.LazyFunction(lambda: faker.name())
-
 
 class CartFactory(factory.django.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+    region = factory.SubFactory(RegionFactory)
+
     class Meta:
         model = Cart
 
-    user = factory.SubFactory(UserFactory)
-    region = factory.SubFactory(RegionFactory)
-
 
 class CartItemFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = CartItem
-
     cart = factory.SubFactory(CartFactory)
     shelf = factory.SubFactory(ShelfFactory)
 
+    class Meta:
+        model = CartItem
+
 
 class OrderFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = Order
-
     region = factory.SubFactory(RegionFactory)
     user = factory.SubFactory(UserFactory)
 
+    class Meta:
+        model = Order
+
 
 class OrderItemFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = OrderItem
-
     order = factory.SubFactory(OrderFactory)
     item = factory.SubFactory(ShelfFactory)
+
+    class Meta:
+        model = OrderItem
