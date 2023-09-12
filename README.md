@@ -17,7 +17,7 @@ Run the following commands in the project root directory:
 ```docker-compose up```
 
 To create superuser:
-```docker-compose run -rm web python manage.py createsuperuser```
+```docker-compose run --rm web python manage.py createsuperuser```
 
 Running without Docker:
 Create and fill in the .env.dev file in the project root directory based on .env.dev.example.
@@ -38,7 +38,7 @@ Create database in postgresql and fill in SQL_DATABASE .env.dev (and SQL_HOST if
 
 ## Running tests
 In the project root directory run for docker:
-```docker-compose run web pytest .```
+```docker-compose run --rm web pytest .```
 
 If run without docker:
 ```pytest .```

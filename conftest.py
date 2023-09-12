@@ -1,7 +1,7 @@
 import pytest
 from rest_framework.test import APIClient
 
-from shop.tests.factories import (
+from utils.factories import (
     ShelfFactory, GlobalProductLimitFactory, RegionFactory, UserFactory, CartFactory,
     CartItemFactory
 )
@@ -23,7 +23,7 @@ def global_limit(db):
 
 
 @pytest.fixture
-def local_limit(db):
+def region(db):
     return RegionFactory()
 
 
@@ -35,14 +35,14 @@ def client(db, user):
 
 
 @pytest.fixture
-def cart_1_item(db, user, shelf, local_limit):
-    cart = CartFactory(user=user, region=local_limit)
+def cart_1_item(db, user, shelf, region):
+    cart = CartFactory(user=user, region=region)
     CartItemFactory(shelf=shelf, cart=cart)
     return cart
 
 
 @pytest.fixture
-def cart_1_item_different_region(db, user, shelf):
+def cart_1_item_second_region(db, user, shelf):
     different_region = RegionFactory(name="OTHER")
     cart = CartFactory(user=user, region=different_region)
     CartItemFactory(shelf=shelf, cart=cart)

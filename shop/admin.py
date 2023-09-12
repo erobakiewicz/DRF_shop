@@ -1,7 +1,6 @@
-from django import forms
 from django.contrib import admin
 
-from shop.models import Shelf, Region, GlobalProductLimit, Order, OrderItem, Cart, CartItem
+from shop.models import Shelf, Region, GlobalProductLimit
 
 
 @admin.register(GlobalProductLimit)
@@ -18,28 +17,3 @@ class RegionAdmin(admin.ModelAdmin):
 @admin.register(Shelf)
 class ShelfAdmin(admin.ModelAdmin):
     pass
-
-
-class OrderItemFormSet(forms.BaseInlineFormSet):
-    pass
-
-
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    formset = OrderItemFormSet
-
-
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    readonly_fields = ["created_at"]
-    list_display = ["user", "region", "status", "created_at"]
-    inlines = [OrderItemInline, ]
-
-
-class CartItemInline(admin.TabularInline):
-    model = CartItem
-
-
-@admin.register(Cart)
-class CartItemAdmin(admin.ModelAdmin):
-    inlines = [CartItemInline, ]

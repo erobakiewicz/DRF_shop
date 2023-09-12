@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 
 from faker import Factory as FakerFactory
 
-from shop.models import GlobalProductLimit, Order, OrderItem, Shelf, Region, CartItem, Cart
+from shop.models import GlobalProductLimit, Shelf, Region
+from orders.models import Order, OrderItem
+from carts.models import Cart, CartItem
 
 faker = FakerFactory.create()
 

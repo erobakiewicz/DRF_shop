@@ -4,27 +4,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from shop.models import Cart, Order
-from shop.serializers import CartSerializer, CreateOrderSerializer, OrderSerializer
+from orders.models import Order
+from orders.serializers import CreateOrderSerializer, OrderSerializer
 
 
-class CartViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet
-):
-    """
-    CartViewSet is a viewset that provides the following actions:
-    create, retrieve, destroy, list.
-    All action is available only for the owner of the carts.
-    """
-    serializer_class = CartSerializer
-
-    def get_queryset(self) -> QuerySet:
-        return Cart.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer) -> None:
-        serializer.save(user=self.request.user)
-
-
+# Create your views here.
 class OrderViewSet(
     mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet
 ):

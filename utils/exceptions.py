@@ -3,19 +3,7 @@ from rest_framework import status
 
 from rest_framework.exceptions import ValidationError as APIValidationError
 
-from shop.constants import ErrorMessages
-
-
-class ShelfObjectDoesNotExistException(ObjectDoesNotExist):
-    status_code = 404
-    default_code = '404'
-    message = ErrorMessages.SHELF_DOES_NOT_EXIST
-
-
-class RegionObjectDoesNotExistException(ObjectDoesNotExist):
-    status_code = 404
-    default_code = '404'
-    message = ErrorMessages.REGION_DOES_NOT_EXIST
+from utils.constants import ErrorMessages
 
 
 class GlobalProductLimitObjectDoesNotExist(ObjectDoesNotExist):
