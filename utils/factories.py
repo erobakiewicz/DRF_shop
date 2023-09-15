@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from faker import Factory as FakerFactory
 
-from shop.models import GlobalProductLimit, Shelf, Region
+from shop.models import GlobalProductLimit, Product, Region
 from orders.models import Order, OrderItem
 from carts.models import Cart, CartItem
 
@@ -30,11 +30,11 @@ class RegionFactory(factory.django.DjangoModelFactory):
         model = Region
 
 
-class ShelfFactory(factory.django.DjangoModelFactory):
+class ProductFactory(factory.django.DjangoModelFactory):
     name = factory.LazyFunction(lambda: faker.name())
 
     class Meta:
-        model = Shelf
+        model = Product
 
 
 class CartFactory(factory.django.DjangoModelFactory):
@@ -47,7 +47,7 @@ class CartFactory(factory.django.DjangoModelFactory):
 
 class CartItemFactory(factory.django.DjangoModelFactory):
     cart = factory.SubFactory(CartFactory)
-    shelf = factory.SubFactory(ShelfFactory)
+    product = factory.SubFactory(ProductFactory)
 
     class Meta:
         model = CartItem
@@ -63,7 +63,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
 
 class OrderItemFactory(factory.django.DjangoModelFactory):
     order = factory.SubFactory(OrderFactory)
-    item = factory.SubFactory(ShelfFactory)
+    item = factory.SubFactory(ProductFactory)
 
     class Meta:
         model = OrderItem

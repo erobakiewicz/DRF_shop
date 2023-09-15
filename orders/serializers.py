@@ -7,16 +7,16 @@ from rest_framework.exceptions import ValidationError
 
 from carts.models import Cart
 from orders.models import OrderItem, Order
+from shop.models import GlobalProductLimit
+from shop.serializers import ProductSerializer
 from utils.constants import CartStatuses, ErrorMessages
 from utils.exceptions import (
     GlobalProductLimitObjectDoesNotExist, GlobalLimitExceedException, RegionLimitExceedException
 )
-from shop.models import Region, GlobalProductLimit
-from shop.serializers import ShelfSerializer
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    item = ShelfSerializer()
+    item = ProductSerializer()
 
     class Meta:
         model = OrderItem
@@ -34,7 +34,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.IntegerField()
-    region = serializers.CharField(max_length=64)
 
     def create(self, validated_data: dict) -> Order:
         """
@@ -42,19 +41,18 @@ class CreateOrderSerializer(serializers.Serializer):
         is finished. If the limits are exceeded, raises an exception and returns API response. Changes are rolled back.
         """
         cart = Cart.objects.get(id=validated_data.get('cart_id'))
-        region = Region.objects.get(name=validated_data.get('region'))
 
         today_orders = Order.objects.select_for_update().filter(
             created_at=datetime.date.today()
         )
         with transaction.atomic():
             order = Order.objects.create(
-                region=region,
+                region=cart.region,
                 user=cart.user,
                 created_at=datetime.date.today()
             )
             OrderItem.objects.bulk_create(
-                objs=[OrderItem(order=order, item=cart_item.shelf) for cart_item in cart.cart_items.all()])
+                objs=[OrderItem(order=order, item=cart_item.product) for cart_item in cart.cart_items.all()])
             try:
                 self.validate_limits(order=order, today_orders=today_orders)
             except (
@@ -92,26 +90,10 @@ class CreateOrderSerializer(serializers.Serializer):
             if order.region.closed_access or local_limit < 0:
                 raise RegionLimitExceedException(ErrorMessages.REGION_LIMIT_EXCEEDED.format(order.region.name))
 
-    def validate(self, data: dict):
-        """
-        Validates the cart and order regions match.
-        """
-        if data['region'] != Cart.objects.get(id=data['cart_id']).region.name:
-            raise serializers.ValidationError(ErrorMessages.ORDER_CART_REGIONS_MISMATCH)
-        return data
-
     def validate_cart_id(self, value: int):
         """
         Validates if the cart belong to user.
         """
         if not Cart.objects.filter(id=value, user=self.context['request'].user).exists():
             raise serializers.ValidationError(ErrorMessages.CART_USER_MISMATCH)
-        return value
-
-    def validate_region(self, value: str):
-        """
-        Validates if the region exists.
-        """
-        if not Region.objects.filter(name=value).exists():
-            raise serializers.ValidationError(ErrorMessages.REGION_DOES_NOT_EXIST)
         return value

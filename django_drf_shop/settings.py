@@ -38,7 +38,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'tylko_rekru_shop.urls'
+ROOT_URLCONF = 'django_drf_shop.urls'
 
 TEMPLATES = [
     {
@@ -56,7 +56,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'tylko_rekru_shop.wsgi.application'
+WSGI_APPLICATION = 'django_drf_shop.wsgi.application'
 
 DATABASES = {
     "default": {

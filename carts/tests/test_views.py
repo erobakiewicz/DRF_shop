@@ -9,12 +9,12 @@ from utils.constants import CartStatuses
 class CartViewSetTestCase:
     url = reverse("api:cart-list")
 
-    def test_add_item_to_cart(self, client, shelf, region):
+    def test_add_item_to_cart(self, client, product, region):
         data = {
             "region": region.id,
             "cart_items": [
                 {
-                    "shelf": shelf.id
+                    "product": product.id
                 }
             ]
         }
@@ -23,14 +23,14 @@ class CartViewSetTestCase:
 
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data.get("status") == CartStatuses.OPEN
-        assert response.data.get("cart_items")[0].get("shelf") == shelf.id
+        assert response.data.get("cart_items")[0].get("product") == product.id
 
     def test_cannot_add_non_existing_item_to_cart(self, client, region):
         data = {
             "region": region.id,
             "cart_items": [
                 {
-                    "shelf": 12345
+                    "product": 12345
                 }
             ]
         }
@@ -38,14 +38,14 @@ class CartViewSetTestCase:
         response = client.post(path=self.url, data=data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data.get("cart_items")[0].get("shelf")[0] == 'Invalid pk "12345" - object does not exist.'
+        assert response.data.get("cart_items")[0].get("product")[0] == 'Invalid pk "12345" - object does not exist.'
 
-    def test_cannot_add_item_to_cart_non_existing_region(self, client, shelf):
+    def test_cannot_add_item_to_cart_non_existing_region(self, client, product):
         data = {
             "region": 12345,
             "cart_items": [
                 {
-                    "shelf": shelf.id
+                    "product": product.id
                 }
             ]
         }

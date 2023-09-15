@@ -1,70 +1,70 @@
 [
-{
+  {
     "model": "shop.globalproductlimit",
     "pk": 1,
     "fields": {
-        "limit_size": 5
+      "limit_size": 5
     }
-},
-{
+  },
+  {
     "model": "shop.region",
     "pk": 1,
     "fields": {
-        "name": "PL",
-        "limit_size": 3,
-        "closed_access": false,
-        "unlimited_access": false
+      "name": "DE",
+      "limit_size": 3,
+      "closed_access": false,
+      "unlimited_access": false
     }
-},
-{
+  },
+  {
     "model": "shop.region",
     "pk": 2,
     "fields": {
-        "name": "DE",
-        "limit_size": 10,
-        "closed_access": false,
-        "unlimited_access": false
+      "name": "UK",
+      "limit_size": 10,
+      "closed_access": false,
+      "unlimited_access": false
     }
-},
-{
+  },
+  {
     "model": "shop.region",
     "pk": 3,
     "fields": {
-        "name": "FR",
-        "limit_size": 55,
-        "closed_access": true,
-        "unlimited_access": false
+      "name": "FR",
+      "limit_size": 5,
+      "closed_access": true,
+      "unlimited_access": false
     }
-},
-{
+  },
+  {
     "model": "shop.region",
     "pk": 4,
     "fields": {
-        "name": "UK",
-        "limit_size": 1,
-        "closed_access": false,
-        "unlimited_access": true
+      "name": "IT",
+      "limit_size": 1,
+      "closed_access": false,
+      "unlimited_access": true
     }
-},
-{
-    "model": "shop.shelf",
+  },
+  {
+    "model": "shop.product",
     "pk": 1,
     "fields": {
-        "name": "SmallShelf"
+      "name": "ProductSmall"
     }
-},
-{
-    "model": "shop.shelf",
+  },
+  {
+    "model": "shop.product",
     "pk": 2,
     "fields": {
-        "name": "MediumShelf"
+      "name": "ProductMedium"
     }
-},
-{
-    "model": "shop.shelf",
+  },
+  {
+    "model": "shop.product",
     "pk": 3,
     "fields": {
-        "name": "BigShelf"
+      "name": "ProductBig"
     }
-}
+  }
 ]

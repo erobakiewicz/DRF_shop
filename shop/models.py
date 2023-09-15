@@ -63,12 +63,12 @@ class Region(models.Model):
             raise ValidationError(ErrorMessages.REGION_ACCESS_ERROR)
 
 
-class Shelf(models.Model):
+class Product(models.Model):
     name = models.CharField(verbose_name="name", max_length=256)
 
     class Meta:
-        verbose_name = "Shelf"
-        verbose_name_plural = "Shelves"
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
 
     def __str__(self) -> str:
         return self.name

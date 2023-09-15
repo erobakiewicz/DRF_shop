@@ -1,5 +1,5 @@
 """
-WSGI config for tylko_rekru_shop project.
+WSGI config for django_drf_shop project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tylko_rekru_shop.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_drf_shop.settings')
 
 application = get_wsgi_application()

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from utils.constants import CartStatuses
-from shop.models import Region, Shelf
+from shop.models import Region, Product
 
 
 class Cart(models.Model):
@@ -38,9 +38,9 @@ class CartItem(models.Model):
         related_name="cart_items",
         on_delete=models.CASCADE
     )
-    shelf = models.ForeignKey(
-        Shelf,
-        verbose_name="shelf",
+    product = models.ForeignKey(
+        Product,
+        verbose_name="product",
         on_delete=models.CASCADE
     )
 
@@ -49,4 +49,4 @@ class CartItem(models.Model):
         verbose_name_plural = "Cart items"
 
     def __str__(self) -> str:
-        return self.shelf.name
+        return self.product.name

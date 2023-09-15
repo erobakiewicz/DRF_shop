@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from shop.models import Shelf, Region, GlobalProductLimit
+from shop.models import Product, Region, GlobalProductLimit
 
 
 @admin.register(GlobalProductLimit)
@@ -14,6 +14,6 @@ class RegionAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Shelf)
-class ShelfAdmin(admin.ModelAdmin):
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
     pass

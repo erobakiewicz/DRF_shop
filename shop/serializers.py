@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from shop.models import Shelf, Region
+from shop.models import Product, Region
 
 
 class RegionSerializer(serializers.ModelSerializer):
@@ -9,7 +9,7 @@ class RegionSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 
-class ShelfSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Shelf
+        model = Product
         fields = ['name']

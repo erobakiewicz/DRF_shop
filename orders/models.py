@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from utils.constants import OrderStatuses
-from shop.models import Region, Shelf
+from shop.models import Region, Product
 
 
 class Order(models.Model):
@@ -39,8 +39,8 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE
     )
     item = models.ForeignKey(
-        Shelf,
-        verbose_name="shelf",
+        Product,
+        verbose_name="product",
         on_delete=models.CASCADE
     )
 
@@ -49,4 +49,4 @@ class OrderItem(models.Model):
         verbose_name_plural = "Order items"
 
     def __str__(self) -> str:
-        return f"Order {self.order.id} shelf {self.item.name}"
+        return f"Order {self.order.id} product {self.item.name}"
